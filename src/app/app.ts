@@ -6,8 +6,10 @@ import { Transport } from './features/transport/transport/transport';
   standalone: true,
   imports: [Transport],
   template: `
-    <h1>Transport Facility Management</h1>
+   <div class="container">
+    <h1>Transport Facility Management1</h1>
     <app-transport></app-transport>
+  </div>
   `
 })
 export class App{}

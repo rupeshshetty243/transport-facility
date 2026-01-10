@@ -1,5 +1,22 @@
-.booking {
+.book {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
+}
+
+.book input {
+  padding: 8px;
+  width: 120px;
+}
+
+.book button {
+  padding: 8px 12px;
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.book button:hover {
+  background-color: #15803d;
 }
