@@ -1,1 +1,6 @@
-<p>ride-list works!</p>
+<p *ngIf="rides.length === 0">No rides available</p>
+
+<div *ngFor="let ride of rides">
+  <p>{{ ride.vehicleType }} | {{ ride.time }} | Seats: {{ ride.vacantSeats }}</p>
+  <app-book-ride [ride]="ride"></app-book-ride>
+</div>

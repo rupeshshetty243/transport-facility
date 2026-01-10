@@ -1,1 +1,13 @@
-<p>add-ride works!</p>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <input placeholder="Employee ID" formControlName="employeeId" />
+  <select formControlName="vehicleType">
+    <option>Car</option>
+    <option>Bike</option>
+  </select>
+  <input placeholder="Vehicle No" formControlName="vehicleNo" />
+  <input type="number" formControlName="vacantSeats" />
+  <input type="time" formControlName="time" />
+  <input placeholder="Pickup Point" formControlName="pickupPoint" />
+  <input placeholder="Destination" formControlName="destination" />
+  <button type="submit">Add Ride</button>
+</form>
