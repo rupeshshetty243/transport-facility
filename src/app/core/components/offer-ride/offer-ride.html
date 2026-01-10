@@ -1,0 +1,51 @@
+<div class="card">
+  <h2>Offer a Ride</h2>
+  <form [formGroup]="rideForm" (ngSubmit)="onSubmit()">
+    
+    <div class="form-group">
+      <label>Employee ID *</label>
+      <input type="text" formControlName="employeeId" placeholder="Unique EMP ID">
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label>Vehicle Type</label>
+        <select formControlName="vehicleType">
+          <option value="Car">Car</option>
+          <option value="Bike">Bike</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Vehicle No *</label>
+        <input type="text" formControlName="vehicleNo">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label>Vacant Seats *</label>
+        <input type="number" formControlName="vacantSeats" min="1">
+      </div>
+      <div class="form-group">
+        <label>Time (HH:MM) *</label>
+        <input type="time" formControlName="time">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Pickup Point *</label>
+      <input type="text" formControlName="pickupPoint">
+    </div>
+
+    <div class="form-group">
+      <label>Destination *</label>
+      <input type="text" formControlName="destination">
+    </div>
+
+    <button type="submit" [disabled]="rideForm.invalid" class="btn primary">Publish Ride</button>
+
+    @if (message) {
+      <p class="msg" [class.error]="!success">{{ message }}</p>
+    }
+  </form>
+</div>

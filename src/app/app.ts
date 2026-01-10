@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
-import { Transport } from './features/transport/transport/transport';
-
+import { CommonModule } from '@angular/common';
+import { OfferRideComponent } from './core/components/offer-ride/offer-ride';
+import { FindRideComponent } from './core/components/find-ride/find-ride';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [Transport],
-  template: `
-   <div class="container">
-    <h1>Transport Facility Management1</h1>
-    <app-transport></app-transport>
-  </div>
-  `
+  imports: [CommonModule, OfferRideComponent, FindRideComponent],
+  templateUrl: './app.html',
+  styleUrls: ['./app.css']
 })
-export class App{}
+export class App {
+  activeTab: 'find' | 'offer' = 'find';
+}

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RideList } from './ride-list';
+import { FindRide } from './find-ride';
 
-describe('RideList', () => {
-  let component: RideList;
-  let fixture: ComponentFixture<RideList>;
+describe('FindRide', () => {
+  let component: FindRide;
+  let fixture: ComponentFixture<FindRide>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RideList]
+      imports: [FindRide]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RideList);
+    fixture = TestBed.createComponent(FindRide);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

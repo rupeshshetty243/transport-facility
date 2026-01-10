@@ -1,1 +1,293 @@
-/* You can add global styles to this file, and also import other style files */
+/* =========================================
+   1. VARIABLES & RESET (Clean Code Strategy)
+   ========================================= */
+:root {
+  /* Brand Colors */
+  --primary-color: #2c3e50;    /* Dark Blue/Grey */
+  --accent-color: #3498db;     /* Bright Blue */
+  --success-color: #27ae60;    /* Green */
+  --error-color: #c0392b;      /* Red */
+  --bg-color: #f4f7f6;         /* Light Grey Background */
+  --card-bg: #ffffff;
+  
+  /* Spacing & Borders */
+  --radius: 8px;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box; /* Ensures padding doesn't break layouts */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  color: #333;
+  line-height: 1.6;
+}
+
+/* =========================================
+   2. LAYOUT & HEADER
+   ========================================= */
+header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 2rem auto; /* Centers the app */
+  padding: 0 1rem;
+}
+
+/* =========================================
+   3. TABS NAVIGATION
+   ========================================= */
+.tabs {
+  display: flex;
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.tab-btn {
+  flex: 1; /* Equal width */
+  padding: 1rem;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #7f8c8d;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-btn:hover {
+  background-color: #ecf0f1;
+}
+
+.tab-btn.active {
+  color: var(--accent-color);
+  border-bottom: 3px solid var(--accent-color);
+  background-color: #fff;
+}
+
+/* =========================================
+   4. FORMS & INPUTS (Custom Native Styling)
+   ========================================= */
+.card {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.row .form-group {
+  flex: 1; /* Splits width 50/50 */
+}
+
+label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+input, select {
+  padding: 0.8rem;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Buttons */
+button.primary-btn {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+
+button.primary-btn:hover {
+  background-color: #2980b9;
+}
+
+button.primary-btn:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   5. RIDE LIST CARDS
+   ========================================= */
+.ride-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: var(--radius);
+  border-left: 5px solid var(--accent-color);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.ride-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.ride-info h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.ride-meta {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.ride-time {
+  background: #ecf0f1;
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-right: 0.5rem;
+}
+
+.book-btn {
+  background-color: var(--success-color);
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.book-btn:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.book-btn:hover:not(:disabled) {
+  background-color: #219150;
+}
+
+/* =========================================
+   6. MODAL OVERLAY
+   ========================================= */
+.modal-backdrop {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(44, 62, 80, 0.7); /* Dark semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn-cancel {
+  background: transparent;
+  border: 1px solid #bdc3c7;
+  color: #7f8c8d;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* =========================================
+   7. UTILITY MESSAGES
+   ========================================= */
+.msg {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-weight: 500;
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.msg.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

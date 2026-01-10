@@ -1,0 +1,48 @@
+<div class="search-box">
+  <div class="filter">
+    <label>My Pickup Time</label>
+    <input type="time" [(ngModel)]="searchTime">
+    <small>(Shows rides +/- 60 mins)</small>
+  </div>
+  <div class="filter">
+    <label>Vehicle Type</label>
+    <select [(ngModel)]="searchVehicle">
+      <option value="All">All</option>
+      <option value="Car">Car</option>
+      <option value="Bike">Bike</option>
+    </select>
+  </div>
+</div>
+
+<div class="list">
+  @for (ride of filteredRides(); track ride.id) {
+    <div class="card ride-item">
+      <div>
+        <h3>{{ride.pickupPoint}} &rarr; {{ride.destination}}</h3>
+        <p><strong>{{ride.time}}</strong> | {{ride.vehicleType}} | Seats: {{ride.vacantSeats}}</p>
+        <p class="sub">Host: {{ride.employeeId}}</p>
+      </div>
+      <button class="btn success" 
+              [disabled]="ride.vacantSeats === 0" 
+              (click)="initBook(ride.id)">
+        {{ ride.vacantSeats === 0 ? 'FULL' : 'BOOK' }}
+      </button>
+    </div>
+  } @empty {
+    <p class="empty">No rides found matching that time.</p>
+  }
+</div>
+
+@if (selectedRideId()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <h3>Confirm Booking</h3>
+      <input type="text" placeholder="Enter YOUR Emp ID" [(ngModel)]="bookerId">
+      @if(bookMsg) { <p class="error">{{bookMsg}}</p> }
+      <div class="actions">
+        <button (click)="selectedRideId.set(null)">Cancel</button>
+        <button class="btn success" (click)="confirmBook()">Confirm</button>
+      </div>
+    </div>
+  </div>
+}
