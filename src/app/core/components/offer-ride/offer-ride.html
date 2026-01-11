@@ -1,10 +1,22 @@
 <div class="card">
   <h2>Offer a Ride</h2>
   <form [formGroup]="rideForm" (ngSubmit)="onSubmit()">
-    
+
     <div class="form-group">
-      <label>Employee ID *</label>
-      <input type="text" formControlName="employeeId" placeholder="Unique EMP ID">
+      <label>Employee ID <span class="req">*</span></label>
+      
+      <input type="text" 
+             formControlName="employeeId" 
+             placeholder="e.g. EMP001" 
+             maxlength="7"
+             appUpperCase> 
+      
+      @if (v.employeeId.touched && v.employeeId.errors?.['pattern']) {
+        <small class="error-text">Must start with 'EMP' followed by digits (e.g., EMP1234)</small>
+      }
+      @if (v.employeeId.touched && v.employeeId.errors?.['required']) {
+        <small class="error-text">Employee ID is required.</small>
+      }
     </div>
 
     <div class="row">
@@ -15,34 +27,60 @@
           <option value="Bike">Bike</option>
         </select>
       </div>
+
       <div class="form-group">
-        <label>Vehicle No *</label>
-        <input type="text" formControlName="vehicleNo">
+        <label>Vehicle No <span class="req">*</span></label>
+        <input type="text" appUpperCase formControlName="vehicleNo" placeholder="KA01AB1234">
+        
+        @if (v.vehicleNo.touched && v.vehicleNo.errors?.['pattern']) {
+          <small class="error-text">Invalid Format (e.g., KA01AB1234)</small>
+        }
       </div>
     </div>
 
     <div class="row">
       <div class="form-group">
-        <label>Vacant Seats *</label>
-        <input type="number" formControlName="vacantSeats" min="1">
+        <label>Vacant Seats <span class="req">*</span></label>
+        
+        <input type="number" 
+               formControlName="vacantSeats" 
+               min="1" 
+               [max]="rideForm.get('vehicleType')?.value === 'Bike' ? 1 : 5">
+        
+        @if (v.vacantSeats.touched && v.vacantSeats.errors?.['max']) {
+          <small class="error-text">
+            Max {{ rideForm.get('vehicleType')?.value === 'Bike' ? '1' : '5' }} seats allowed.
+          </small>
+        }
+        @if (v.vacantSeats.touched && v.vacantSeats.errors?.['min']) {
+          <small class="error-text">At least 1 seat required.</small>
+        }
       </div>
+<!-- 
       <div class="form-group">
-        <label>Time (HH:MM) *</label>
+        <label>Time (HH:MM) <span class="req">*</span></label>
+        <input type="time" formControlName="time">
+      </div> -->
+
+      <div class="form-group">
+        <label>Time <small>(24h Format)</small> <span class="req">*</span></label>
         <input type="time" formControlName="time">
       </div>
     </div>
 
     <div class="form-group">
-      <label>Pickup Point *</label>
+      <label>Pickup Point <span class="req">*</span></label>
       <input type="text" formControlName="pickupPoint">
     </div>
 
     <div class="form-group">
-      <label>Destination *</label>
+      <label>Destination <span class="req">*</span></label>
       <input type="text" formControlName="destination">
     </div>
 
-    <button type="submit" [disabled]="rideForm.invalid" class="btn primary">Publish Ride</button>
+    <button type="submit" [disabled]="rideForm.invalid" class="btn primary">
+      Publish Ride
+    </button>
 
     @if (message) {
       <p class="msg" [class.error]="!success">{{ message }}</p>
