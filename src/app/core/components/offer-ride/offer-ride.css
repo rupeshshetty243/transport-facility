@@ -1,5 +1,3 @@
-/* core/components/offer-ride/offer-ride.css */
-
 :host {
   --primary: #4a90e2;
   --primary-hover: #357abd;
@@ -13,40 +11,38 @@
   width: 100%;
 }
 
-/* --- Layout Spacing --- */
 .row {
   display: flex;
-  gap: 12px; /* <--- UPDATED: Tighter gap between side-by-side inputs */
-  margin-bottom: 12px; /* <--- UPDATED: Less space between rows */
+  gap: 12px; 
+  margin-bottom: 12px; 
 }
 
 .form-group {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px; /* <--- UPDATED: Less space for single rows */
+  margin-bottom: 12px;
 }
 
-/* --- Inputs & Labels --- */
 label {
   font-weight: 600;
-  margin-bottom: 4px; /* <--- UPDATED: Label closer to input */
-  font-size: 0.85rem; /* Smaller font */
+  margin-bottom: 4px; 
+  font-size: 0.85rem; 
   color: #444;
 }
 
 .req { color: var(--error); }
 
 input, select {
-  padding: 8px 10px;  /* <--- UPDATED: Reduced padding makes input shorter */
+  padding: 8px 10px; 
   border: 1px solid var(--border);
   border-radius: 6px;
-  font-size: 0.9rem;  /* Smaller text inside input */
+  font-size: 0.9rem;  
   background: #fff;
   width: 100%;
   box-sizing: border-box;
   transition: all 0.2s;
-  height: 38px; /* Force a consistent compact height */
+  height: 38px; 
 }
 
 input:focus, select:focus {
@@ -55,7 +51,6 @@ input:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
 }
 
-/* --- Alerts (Top of Form) --- */
 .alert-banner {
   padding: 8px 12px;
   border-radius: 6px;
@@ -82,7 +77,7 @@ input:focus, select:focus {
 /* --- Button --- */
 .btn.primary {
   width: 100%;
-  padding: 10px; /* Compact button */
+  padding: 10px; 
   background: var(--primary);
   color: white;
   border: none;
@@ -109,7 +104,6 @@ input:focus, select:focus {
   margin-top: 2px;
 }
 
-/* Mobile: Stack columns if screen is very small */
 @media (max-width: 400px) {
   .row { flex-direction: column; gap: 0; }
 }

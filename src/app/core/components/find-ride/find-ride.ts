@@ -10,7 +10,7 @@ import { startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-find-ride',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, UpperCaseDirective, OfferRideComponent],
+  imports: [CommonModule, ReactiveFormsModule, UpperCaseDirective],
   templateUrl: './find-ride.html',
   styleUrls: ['./find-ride.css']
 })
@@ -18,27 +18,23 @@ export class FindRideComponent {
   private service = inject(TransportService);
   private fb = inject(FormBuilder);
   
-  // --- 1. NEW: Signal for Toast Notification ---
   successMsg = signal('');
 
-  // --- Search Form ---
   searchForm = this.fb.group({
     time: [''],
     vehicle: ['All']
   });
 
-  // --- Booking Control ---
   bookerControl = new FormControl('', [
     Validators.required,
     Validators.pattern(/^EMP[0-9]{1,4}$/), 
     Validators.maxLength(7) 
   ]);
 
-  // --- Modal State ---
   selectedRideId = signal<string | null>(null);
   showOfferModal = signal(false);
 
-  // --- Filter Logic ---
+
   private searchValues = toSignal(
     this.searchForm.valueChanges.pipe(startWith(this.searchForm.value)), 
     { initialValue: this.searchForm.value }
@@ -60,8 +56,6 @@ export class FindRideComponent {
      }).sort((a, b) => this.service.timeToMinutes(a.time) - this.service.timeToMinutes(b.time));
   });
 
-  // --- Actions ---
-
   initBook(id: string) {
     this.selectedRideId.set(id);
     this.bookerControl.reset(); 
@@ -78,11 +72,10 @@ export class FindRideComponent {
     const res = this.service.bookRide(this.selectedRideId()!, empId);
     
     if (res.success) {
-      // --- CHANGED: Show Toast instead of Alert ---
       this.successMsg.set(res.message); 
-      this.selectedRideId.set(null); // Close modal
+      this.selectedRideId.set(null); 
       
-      // Auto-hide after 3 seconds
+      // 3 seconds delay
       setTimeout(() => {
         this.successMsg.set('');
       }, 3000);

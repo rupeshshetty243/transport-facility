@@ -15,7 +15,6 @@ import { UpperCaseDirective } from '../../directives/upper-case';
 })
 export class OfferRideComponent implements OnInit, OnDestroy {
   
-  // Event to tell parent to close modal
   @Output() close = new EventEmitter<void>();
 
   locations: string[] = [
@@ -82,19 +81,17 @@ export class OfferRideComponent implements OnInit, OnDestroy {
       
       const res = this.service.addRide(newRide);
       
-      // 1. Show the message immediately
       this.success = res.success;
       this.message = res.message;
 
       if (this.success) {
-        // 2. Disable the form to prevent double-clicks & show "finished" state
+        // Disable the form 
         this.rideForm.disable();
 
-        // 3. Wait 2 seconds (2000ms) so the user can read the message
+        // 2 seconds of delay, close the modal and reset the form
         setTimeout(() => {
-          this.close.emit(); // <--- Close dialog NOW
+          this.close.emit(); 
           
-          // 4. cleanup (optional, in case component stays alive)
           this.rideForm.enable();
           this.rideForm.reset({ vehicleType: 'Car', vacantSeats: 1 });
           this.message = ''; 
@@ -110,5 +107,7 @@ export class OfferRideComponent implements OnInit, OnDestroy {
     if (this.sub) this.sub.unsubscribe();
   }
 
-  get v() { return this.rideForm.controls; }
+  get v() {
+     return this.rideForm.controls; 
+    }
 }
