@@ -67,7 +67,7 @@ input:focus, select:focus {
 
 .card.ride-item {
   background: var(--card-bg);
-  padding: 1.5rem;
+  padding: 0.5rem;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border-left: 5px solid var(--primary-color); 
@@ -98,7 +98,6 @@ p {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
-
 
 .btn {
   padding: 0.6rem 1.5rem;

@@ -23,18 +23,18 @@
 
 <div class="list">
   @for (ride of filteredRides(); track ride.id) {
-    <div class="card ride-item">
-      <div>
-        <h3>{{ride.pickupPoint}} &rarr; {{ride.destination}}</h3>
+ <div class="card ride-item">
+  <div>
+    <h3>{{ride.pickupPoint}} &rarr; {{ride.destination}}</h3>
         <p><strong>{{ride.time}}</strong> | {{ride.vehicleType}} | Seats: {{ride.vacantSeats}}</p>
-        <p class="sub">Host: {{ride.employeeId}}</p>
-      </div>
+    <p class="sub">Host: {{ride.employeeId}}</p>
+  </div>
       <button class="btn success" 
               [disabled]="ride.vacantSeats === 0" 
               (click)="initBook(ride.id)">
         {{ ride.vacantSeats === 0 ? 'FULL' : 'BOOK' }}
       </button>
-    </div>
+  </div>
   } @empty {
     <p class="empty">No rides found matching that time.</p>
   }
