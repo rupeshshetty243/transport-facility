@@ -24,26 +24,6 @@ export class TransportService {
     }
     // Default dummy data for the first run
     return [
-      {
-        id: 'r1',
-        employeeId: 'EMP001',
-        vehicleType: 'Car',
-        vehicleNo: 'KA-01-AB-1234',
-        vacantSeats: 3,
-        time: '09:00',
-        pickupPoint: 'Silk Board',
-        destination: 'Whitefield'
-      },
-      {
-        id: 'r2',
-        employeeId: 'EMP055',
-        vehicleType: 'Bike',
-        vehicleNo: 'KA-05-XY-9876',
-        vacantSeats: 1,
-        time: '09:30',
-        pickupPoint: 'HSR Layout',
-        destination: 'Eco Space'
-      }
     ];
   }
 

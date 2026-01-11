@@ -56,27 +56,44 @@
           <small class="error-text">At least 1 seat required.</small>
         }
       </div>
-<!-- 
-      <div class="form-group">
-        <label>Time (HH:MM) <span class="req">*</span></label>
-        <input type="time" formControlName="time">
-      </div> -->
-
-      <div class="form-group">
-        <label>Time <small>(24h Format)</small> <span class="req">*</span></label>
-        <input type="time" formControlName="time">
-      </div>
-    </div>
 
     <div class="form-group">
+      <label>Time <small>(24h Format)</small> <span class="req">*</span></label>
+      <input type="time" formControlName="time">
+      
+      @if (v.time.touched && v.time.errors?.['pastTime']) {
+        <small class="error-text">You cannot schedule a ride in the past.</small>
+      }
+    </div>
+</div>
+
+  <div class="form-group">
       <label>Pickup Point <span class="req">*</span></label>
-      <input type="text" formControlName="pickupPoint">
+      <input type="text" formControlName="pickupPoint" list="locations" placeholder="Select from list...">
+      
+      @if (v.pickupPoint.touched && v.pickupPoint.errors?.['invalidLocation']) {
+        <small class="error-text">Please select a valid location from the list.</small>
+      }
     </div>
 
     <div class="form-group">
       <label>Destination <span class="req">*</span></label>
-      <input type="text" formControlName="destination">
+      <input type="text" formControlName="destination" list="locations" placeholder="Select from list...">
+      
+      @if (v.destination.touched && v.destination.errors?.['invalidLocation']) {
+        <small class="error-text">Please select a valid location from the list.</small>
+      }
+      
+      @if (rideForm.errors?.['sameLocation'] && (v.pickupPoint.touched || v.destination.touched)) {
+        <small class="error-text">Pickup and Destination cannot be the same.</small>
+      }
     </div>
+
+    <datalist id="locations">
+      @for (loc of commonLocations; track loc) {
+        <option [value]="loc"></option>
+      }
+    </datalist>
 
     <button type="submit" [disabled]="rideForm.invalid" class="btn primary">
       Publish Ride
