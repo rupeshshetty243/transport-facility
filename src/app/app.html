@@ -1,22 +1,29 @@
-<header class="navbar">
-  <div class="logo">Transport Facility Manager</div>
+<header class="main-header">
+  <h1>Transport Facility Manager</h1>
+  
+  <button class="btn-offer" (click)="openModal()">
+    + Offer a Ride
+  </button>
 </header>
 
-<div class="container">
-  <div class="tabs">
-    <button class="tab-btn" [class.active]="activeTab === 'find'" (click)="activeTab = 'find'">
-      Find a Ride
-    </button>
-    <button class="tab-btn" [class.active]="activeTab === 'offer'" (click)="activeTab = 'offer'">
-      Offer a Ride
-    </button>
-  </div>
+<main class="content-area">
+  <app-find-ride></app-find-ride>
+</main>
 
-  <div class="content">
-    @if (activeTab === 'find') {
-      <app-find-ride></app-find-ride>
-    } @else {
-      <app-offer-ride></app-offer-ride>
-    }
+
+@if (isOfferModalOpen) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      
+      <div class="modal-header">
+        <h3>Share your Ride</h3>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <app-offer-ride (close)="closeModal()"></app-offer-ride>
+      </div>
+
+    </div>
   </div>
-</div>
+}

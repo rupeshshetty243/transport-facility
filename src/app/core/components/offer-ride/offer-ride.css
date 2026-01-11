@@ -1,184 +1,115 @@
-/* --- Variables for easy theming --- */
+/* core/components/offer-ride/offer-ride.css */
+
 :host {
-  --primary-color: #4a90e2;       /* Professional Blue */
+  --primary: #4a90e2;
   --primary-hover: #357abd;
-  --success-bg: #d4edda;
-  --success-text: #155724;
-  --error-bg: #f8d7da;
-  --error-text: #721c24;
-  --input-border: #ced4da;
-  --focus-ring: rgba(74, 144, 226, 0.25);
-  --card-bg: #ffffff;
-  --text-color: #333;
-  --label-color: #555;
+  --border: #ccc;
+  --error: #e74c3c;
+  --success-bg: #d1fae5;
+  --success-text: #065f46;
 }
 
-/* --- Main Card Container --- */
-.card {
-  background-color: var(--card-bg);
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+.form-container {
+  width: 100%;
 }
 
-h2 {
-  text-align: center;
-  color: var(--text-color);
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-}
-
-/* --- Form Layout --- */
-.form-group {
-  margin-bottom: 1.25rem;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Flex row for side-by-side inputs (Vehicle, Seats, Time) */
+/* --- Layout Spacing --- */
 .row {
   display: flex;
-  gap: 1.5rem;
-  width: 100%;
+  gap: 12px; /* <--- UPDATED: Tighter gap between side-by-side inputs */
+  margin-bottom: 12px; /* <--- UPDATED: Less space between rows */
 }
 
-/* Ensure items inside row take equal width */
-.row .form-group {
+.form-group {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px; /* <--- UPDATED: Less space for single rows */
 }
 
-/* --- Labels & Inputs --- */
+/* --- Inputs & Labels --- */
 label {
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--label-color);
-  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 4px; /* <--- UPDATED: Label closer to input */
+  font-size: 0.85rem; /* Smaller font */
+  color: #444;
 }
 
-.req {
-  color: var(--error-text);
-  margin-left: 2px;
-}
+.req { color: var(--error); }
 
 input, select {
-  padding: 0.75rem;
-  border: 1px solid var(--input-border);
+  padding: 8px 10px;  /* <--- UPDATED: Reduced padding makes input shorter */
+  border: 1px solid var(--border);
   border-radius: 6px;
-  font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  background-color: #fff;
+  font-size: 0.9rem;  /* Smaller text inside input */
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s;
+  height: 38px; /* Force a consistent compact height */
 }
 
-/* Focus State - Nice blue glow */
 input:focus, select:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px var(--focus-ring);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
 }
 
-/* --- Validation Styling (The "Nice Design" part) --- */
-
-/* 1. Input Border turns red only if touched AND invalid */
-input.ng-invalid.ng-touched,
-select.ng-invalid.ng-touched {
-  border-color: #dc3545;
-  background-color: #fff8f8; /* Very subtle red tint */
-}
-
-/* 2. Input Border turns green if valid AND touched (Optional, removes ambiguity) */
-input.ng-valid.ng-touched,
-select.ng-valid.ng-touched {
-  border-color: #28a745;
-}
-
-/* 3. Error Text Message */
-.error-text {
-  color: #dc3545;
+/* --- Alerts (Top of Form) --- */
+.alert-banner {
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
   font-size: 0.85rem;
-  margin-top: 0.35rem;
   display: flex;
   align-items: center;
+  gap: 8px;
+  line-height: 1.2;
 }
 
-/* Add a small warning icon before error text using CSS pseudo-element */
-.error-text::before {
-  content: "⚠";
-  margin-right: 5px;
-  font-size: 1rem;
+.alert-banner.success {
+  background-color: var(--success-bg);
+  color: var(--success-text);
+  border: 1px solid #a7f3d0;
 }
 
-/* --- Buttons --- */
-.btn {
+.alert-banner.error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* --- Button --- */
+.btn.primary {
   width: 100%;
-  padding: 0.85rem;
+  padding: 10px; /* Compact button */
+  background: var(--primary);
+  color: white;
   border: none;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  margin-top: 1rem;
-}
-
-.btn.primary {
-  background-color: var(--primary-color);
-  color: white;
+  margin-top: 5px;
+  transition: background 0.2s;
 }
 
 .btn.primary:hover:not(:disabled) {
-  background-color: var(--primary-hover);
+  background: var(--primary-hover);
 }
 
 .btn:disabled {
-  background-color: #e9ecef;
-  color: #adb5bd;
+  background: #cbd5e1;
   cursor: not-allowed;
 }
 
-/* --- Global Success/Error Message (Bottom of form) --- */
-.msg {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  border-radius: 6px;
-  text-align: center;
-  font-weight: 500;
-  animation: fadeIn 0.3s ease-in;
+.error-text {
+  color: var(--error);
+  font-size: 0.75rem;
+  margin-top: 2px;
 }
 
-/* Success State (Default based on logic) */
-.msg:not(.error) {
-  background-color: var(--success-bg);
-  color: var(--success-text);
-  border-left: 5px solid #28a745;
+/* Mobile: Stack columns if screen is very small */
+@media (max-width: 400px) {
+  .row { flex-direction: column; gap: 0; }
 }
-
-/* Error State */
-.msg.error {
-  background-color: var(--error-bg);
-  color: var(--error-text);
-  border-left: 5px solid #dc3545;
-}
-
-/* --- Responsive Design --- */
-@media (max-width: 500px) {
-  .card {
-    padding: 1.25rem;
-    margin: 1rem;
-  }
-
-  /* Stack the side-by-side inputs on mobile */
-  .row {
-    flex-direction: column;
-    gap: 0;
-  }
-}
-
-/* Simple fade animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-

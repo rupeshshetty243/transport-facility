@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, HostListener, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { TransportService } from '../../services/transport';
@@ -15,17 +15,13 @@ import { UpperCaseDirective } from '../../directives/upper-case';
 })
 export class OfferRideComponent implements OnInit, OnDestroy {
   
-  // FIXED: Renamed 'commonLocations' to 'locations' to match your HTML
+  // Event to tell parent to close modal
+  @Output() close = new EventEmitter<void>();
+
   locations: string[] = [
-    'Office - Eco Space',
-    'Silk Board Junction',
-    'HSR Layout BDA Complex',
-    'Marathahalli Bridge',
-    'Whitefield ITPL',
-    'Koramangala Sony World',
-    'Indiranagar Metro',
-    'Hebbal Flyover',
-    'Electronic City Phase 1'
+    'Office - Eco Space', 'Silk Board Junction', 'HSR Layout BDA Complex',
+    'Marathahalli Bridge', 'Whitefield ITPL', 'Koramangala Sony World',
+    'Indiranagar Metro', 'Hebbal Flyover', 'Electronic City Phase 1'
   ];
 
   private fb = inject(FormBuilder);
@@ -41,43 +37,28 @@ export class OfferRideComponent implements OnInit, OnDestroy {
     employeeId: ['', [Validators.required, Validators.pattern(/^EMP[0-9]{1,4}$/), Validators.maxLength(7)]],
     vehicleType: ['Car', Validators.required],
     vehicleNo: ['', [Validators.required, Validators.pattern(this.vehicleRegex)]],
-    vacantSeats: [1, [Validators.required, Validators.min(1), Validators.max(5)]], // Default max to 5 (Car)
+    vacantSeats: [1, [Validators.required, Validators.min(1), Validators.max(5)]],
     time: ['', [Validators.required, this.futureTimeValidator]], 
     pickupPoint: ['', Validators.required], 
     destination: ['', Validators.required],
-  }, { 
-    validators: this.pickupDestinationValidator 
-  });
+  }, { validators: this.pickupDestinationValidator });
 
-  // --- CUSTOM VALIDATORS ---
-
+  
+  // --- VALIDATORS ---
   futureTimeValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
-
-    const [inputHours, inputMinutes] = control.value.split(':').map(Number);
+    const [h, m] = control.value.split(':').map(Number);
     const now = new Date();
-    
-    // Convert times to minutes for easy comparison
-    const currentTotalMinutes = (now.getHours() * 60) + now.getMinutes();
-    const inputTotalMinutes = (inputHours * 60) + inputMinutes;
-
-    if (inputTotalMinutes <= currentTotalMinutes) {
-      return { pastTime: true };
-    }
-    return null;
+    const curMins = (now.getHours() * 60) + now.getMinutes();
+    const inMins = (h * 60) + m;
+    return inMins <= curMins ? { pastTime: true } : null;
   }
 
   pickupDestinationValidator(group: AbstractControl): ValidationErrors | null {
-    const pickup = group.get('pickupPoint')?.value;
-    const dest = group.get('destination')?.value;
-
-    if (pickup && dest && pickup === dest) {
-      return { sameLocation: true };
-    }
-    return null;
+    const p = group.get('pickupPoint')?.value;
+    const d = group.get('destination')?.value;
+    return (p && d && p === d) ? { sameLocation: true } : null;
   }
-
-  // --- LIFECYCLE HOOKS ---
 
   ngOnInit() {
     this.sub = this.rideForm.get('vehicleType')!.valueChanges.subscribe(type => {
@@ -87,13 +68,8 @@ export class OfferRideComponent implements OnInit, OnDestroy {
 
   updateSeatValidators(type: string | null) {
     const seatControl = this.rideForm.get('vacantSeats');
-    
-    if (type === 'Bike') {
-      seatControl?.setValidators([Validators.required, Validators.min(1), Validators.max(1)]);
-    } else {
-      seatControl?.setValidators([Validators.required, Validators.min(1), Validators.max(5)]);
-    }
-    
+    const max = type === 'Bike' ? 1 : 5;
+    seatControl?.setValidators([Validators.required, Validators.min(1), Validators.max(max)]);
     seatControl?.updateValueAndValidity();
   }
 
@@ -105,12 +81,24 @@ export class OfferRideComponent implements OnInit, OnDestroy {
       };
       
       const res = this.service.addRide(newRide);
-      this.message = res.message;
+      
+      // 1. Show the message immediately
       this.success = res.success;
+      this.message = res.message;
 
       if (this.success) {
-        // Reset form but keep defaults
-        this.rideForm.reset({ vehicleType: 'Car', vacantSeats: 1 });
+        // 2. Disable the form to prevent double-clicks & show "finished" state
+        this.rideForm.disable();
+
+        // 3. Wait 2 seconds (2000ms) so the user can read the message
+        setTimeout(() => {
+          this.close.emit(); // <--- Close dialog NOW
+          
+          // 4. cleanup (optional, in case component stays alive)
+          this.rideForm.enable();
+          this.rideForm.reset({ vehicleType: 'Car', vacantSeats: 1 });
+          this.message = ''; 
+        }, 2000);
       }
     } else {
       this.message = "Please fix the errors in the form.";
@@ -122,7 +110,5 @@ export class OfferRideComponent implements OnInit, OnDestroy {
     if (this.sub) this.sub.unsubscribe();
   }
 
-  get v() {
-     return this.rideForm.controls; 
-  }
+  get v() { return this.rideForm.controls; }
 }

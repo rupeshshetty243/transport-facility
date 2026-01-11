@@ -45,16 +45,8 @@
   <div class="modal-backdrop">
     <div class="modal">
       <h3>Confirm Booking</h3>
-      
-      <input type="text" 
-             placeholder="Enter YOUR Emp ID (e.g. EMP001)" 
-             [(ngModel)]="bookerId"
-             appUpperCase
-             maxlength="7"
-             (input)="bookMsg = ''">
-      
+      <input type="text" placeholder="Enter YOUR Emp ID" [(ngModel)]="bookerId">
       @if(bookMsg) { <p class="error">{{bookMsg}}</p> }
-      
       <div class="actions">
         <button (click)="selectedRideId.set(null)">Cancel</button>
         <button class="btn success" (click)="confirmBook()">Confirm</button>
