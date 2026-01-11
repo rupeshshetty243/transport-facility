@@ -1,3 +1,10 @@
+@if (successMsg()) {
+  <div class="toast-notification">
+    <div class="icon">✓</div>
+    <div class="message">{{ successMsg() }}</div>
+  </div>
+}
+
 <div class="search-box" [formGroup]="searchForm">
   <div class="filter">
     <label>My Pickup Time</label>
@@ -48,14 +55,8 @@
         <div class="error-container">
           @if (bookerControl.hasError('required')) { <p class="error">ID is required.</p> }
           @if (bookerControl.hasError('pattern')) { <p class="error">Format: EMP + Digits.</p> }
-          
-          @if (bookerControl.hasError('selfBooking')) { 
-            <p class="error">You cannot book your own ride!</p> 
-          }
-          
-          @if (bookerControl.hasError('serverError')) { 
-             <p class="error">{{ bookerControl.getError('serverError') }}</p> 
-          }
+          @if (bookerControl.hasError('selfBooking')) { <p class="error">You cannot book your own ride!</p> }
+          @if (bookerControl.hasError('serverError')) { <p class="error">{{ bookerControl.getError('serverError') }}</p> }
         </div>
       }
 
