@@ -19,7 +19,7 @@ export class OfferRideComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter<void>();
 
   locations: string[] = [
-    'Office - Eco Space', 'Silk Board Junction', 'HSR Layout BDA Complex',
+    'Office - BTM 2nd Stage', 'Silk Board Junction', 'HSR Layout BDA Complex',
     'Marathahalli Bridge', 'Whitefield ITPL', 'Koramangala Sony World',
     'Indiranagar Metro', 'Hebbal Flyover', 'Electronic City Phase 1'
   ];

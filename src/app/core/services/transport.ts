@@ -43,7 +43,6 @@ export class TransportService {
     return { success: true, message: 'Ride published successfully!' };
   }
 
-  // --- FIXED: Book a Ride ---
   bookRide(rideId: string, bookerId: string): { success: boolean; message: string } {
     const currentRides = this.ridesSignal();
     const rideIndex = currentRides.findIndex(r => r.id === rideId);
@@ -52,32 +51,26 @@ export class TransportService {
     
     const ride = currentRides[rideIndex];
 
-    // 1. Initialize array if it's missing (handling old data from local storage)
     const currentBookedUsers = ride.bookedUsers || [];
 
-    // 2. CHECK: Is this user already in the list?
     if (currentBookedUsers.includes(bookerId)) {
       return { success: false, message: 'You have already booked this ride!' };
     }
 
-    // 3. CHECK: Is the user the Host?
     if (ride.employeeId === bookerId) {
       return { success: false, message: 'You cannot book your own ride.' };
     }
 
-    // 4. CHECK: Seats available
     if (ride.vacantSeats <= 0) {
       return { success: false, message: 'No seats available.' };
     }
 
-    // UPDATE STATE & STORAGE
     this.ridesSignal.update(rides => {
       const updatedRides = [...rides];
       
       updatedRides[rideIndex] = { 
         ...ride, 
         vacantSeats: ride.vacantSeats - 1,
-        // Add the booker to the list
         bookedUsers: [...currentBookedUsers, bookerId] 
       };
       

@@ -11,7 +11,6 @@ import { FindRideComponent } from './core/components/find-ride/find-ride';
   styleUrls: ['./app.css']
 })
 export class App {
-  // State to control popup visibility
   isOfferModalOpen = false;
 
   openModal() {

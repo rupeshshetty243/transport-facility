@@ -1,21 +1,6 @@
 
-:root {
-  /* Brand Colors */
-  --primary-color: #2c3e50;    /* Dark Blue/Grey */
-  --accent-color: #3498db;     /* Bright Blue */
-  --success-color: #27ae60;    /* Green */
-  --error-color: #c0392b;      /* Red */
-  --bg-color: #f4f7f6;         /* Light Grey Background */
-  --card-bg: #ffffff;
-  
-  /* Spacing & Borders */
-  --radius: 8px;
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 * {
-  box-sizing: border-box; /* Ensures padding doesn't break layouts */
+  box-sizing: border-box; 
 }
 
 body {
@@ -27,9 +12,6 @@ body {
   line-height: 1.6;
 }
 
-/* =========================================
-   2. LAYOUT & HEADER
-   ========================================= */
 header {
   background-color: var(--primary-color);
   color: white;
@@ -47,13 +29,10 @@ header h1 {
 
 .container {
   max-width: 900px;
-  margin: 2rem auto; /* Centers the app */
+  margin: 2rem auto; 
   padding: 0 1rem;
 }
 
-/* =========================================
-   3. TABS NAVIGATION
-   ========================================= */
 .tabs {
   display: flex;
   background: white;
@@ -64,7 +43,7 @@ header h1 {
 }
 
 .tab-btn {
-  flex: 1; /* Equal width */
+  flex: 1;
   padding: 1rem;
   border: none;
   background: transparent;
@@ -86,9 +65,6 @@ header h1 {
   background-color: #fff;
 }
 
-/* =========================================
-   4. FORMS & INPUTS (Custom Native Styling)
-   ========================================= */
 .card {
   background: var(--card-bg);
   padding: 2rem;
@@ -108,7 +84,7 @@ header h1 {
 }
 
 .row .form-group {
-  flex: 1; /* Splits width 50/50 */
+  flex: 1; 
 }
 
 label {
@@ -157,9 +133,6 @@ button.primary-btn:disabled {
   cursor: not-allowed;
 }
 
-/* =========================================
-   5. RIDE LIST CARDS
-   ========================================= */
 .ride-card {
   display: flex;
   justify-content: space-between;
@@ -218,16 +191,13 @@ button.primary-btn:disabled {
   background-color: #219150;
 }
 
-/* =========================================
-   6. MODAL OVERLAY
-   ========================================= */
 .modal-backdrop {
   position: fixed;
   top: 0; 
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(44, 62, 80, 0.7); /* Dark semi-transparent */
+  background: rgba(44, 62, 80, 0.7); 
   display: flex;
   justify-content: center;
   align-items: center;
