@@ -1,59 +1,69 @@
-# TransportFacility
+# 🚗 Transport Facility Manager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.0.
+A web application designed to help employees schedule, offer, and book rides with colleagues. Built as a technical assignment to demonstrate clean architecture, reactive state management, and pure CSS styling.
 
-## Development server
+## 📋 Assignment Overview
 
-To start a local development server, run:
+* [cite_start]**Goal:** Build a facility for employees to share rides (pick-up/drop-off)[cite: 19].
+* [cite_start]**Constraint:** No CSS frameworks allowed (Pure CSS only).
+* [cite_start]**Framework:** Angular 20[cite: 42].
+
+## 🌟 Key Features
+
+### 1. Offer a Ride
+* [cite_start]Employees can publish a ride with details: **Vehicle Type, Vehicle No, Vacant Seats, Time, Source, and Destination**[cite: 26].
+* **Validation:**
+    * Validates realistic seat counts (e.g., Bike = 1 seat).
+    * Prevents invalid inputs (e.g., past times).
+
+### 2. Find & Book a Ride
+* [cite_start]**Smart Time Matching:** Displays rides only within a **+/- 60 minute buffer** of the user's requested time[cite: 24].
+* [cite_start]**Filters:** Users can filter available rides by **Vehicle Type** (Car/Bike)[cite: 25].
+* **Booking Logic:**
+    * [cite_start]Prevents users from booking their own rides[cite: 36].
+    * [cite_start]Prevents duplicate bookings by the same user[cite: 37].
+    * [cite_start]**Real-time Updates:** Automatically decreases the "Vacant Seats" count upon successful booking[cite: 35].
+
+## 🛠️ Tech Stack
+
+* **Framework:** Angular 20 (Standalone Components)
+* **State Management:** Angular Signals
+* **Styling:** Native CSS3 (Flexbox, CSS Variables, Responsive Design) - *No Libraries used*
+* **Forms:** Reactive Forms with Custom Validators
+
+## 🚀 Live Demo
+
+[**Click here to view the Live Application**](https://rupeshshetty243.github.io/transport-facility/)
+
+*(Note: Replace the link above with your actual GitHub Pages URL after deployment)*
+
+## ⚙️ Installation & Setup
+
+1.  **Clone the repository**
+    ```bash
+    git clone [https://github.com/rupeshshetty243/transport-facility.git](https://github.com/rupeshshetty243/transport-facility.git)
+    cd transport-facility
+    ```
+
+2.  **Install Dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Run Development Server**
+    ```bash
+    ng serve
+    ```
+    Navigate to `http://localhost:4200/`.
+
+4.  **Run Unit Tests**
+    ```bash
+    ng test
+    ```
+
+## 📦 Deployment
+
+This project includes a dedicated script for GitHub Pages deployment.
 
 ```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+npm run deploy
