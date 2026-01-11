@@ -1,12 +1,12 @@
-<div class="search-box">
+<div class="search-box" [formGroup]="searchForm">
   <div class="filter">
     <label>My Pickup Time</label>
-    <input type="time" [(ngModel)]="searchTime">
+    <input type="time" formControlName="time"> 
     <small>(Shows rides +/- 60 mins)</small>
   </div>
   <div class="filter">
     <label>Vehicle Type</label>
-    <select [(ngModel)]="searchVehicle">
+    <select formControlName="vehicle">
       <option value="All">All</option>
       <option value="Car">Car</option>
       <option value="Bike">Bike</option>
@@ -14,16 +14,14 @@
   </div>
 </div>
 
-
 <div class="list">
   @for (ride of filteredRides(); track ride.id) {
     <div class="card ride-item">
       <div>
         <h3>{{ride.pickupPoint}} &rarr; {{ride.destination}}</h3>
-        <p><strong>{{ formatTime(ride.time) }}</strong> | {{ride.vehicleType}} | Seats: {{ride.vacantSeats}}</p>
+        <p><strong>{{ride.time}}</strong> | {{ride.vehicleType}} | Seats: {{ride.vacantSeats}}</p>
         <p class="sub">Host: {{ride.employeeId}}</p>
       </div>
-      
       <button class="btn success" 
               [disabled]="ride.vacantSeats === 0" 
               (click)="initBook(ride.id)">
@@ -31,13 +29,7 @@
       </button>
     </div>
   } @empty {
-    <p class="empty">
-      @if (!searchTime()) {
-        Please select a pickup time to see available rides.
-      } @else {
-        No rides found matching that time.
-      }
-    </p>
+    <p class="empty">No rides found matching that time.</p>
   }
 </div>
 
@@ -45,11 +37,35 @@
   <div class="modal-backdrop">
     <div class="modal">
       <h3>Confirm Booking</h3>
-      <input type="text" placeholder="Enter YOUR Emp ID" [(ngModel)]="bookerId">
-      @if(bookMsg) { <p class="error">{{bookMsg}}</p> }
+      
+      <input type="text" 
+             appUpperCase 
+             placeholder="Enter YOUR Emp ID" 
+             [formControl]="bookerControl" 
+             maxlength="7">
+
+      @if (bookerControl.touched && bookerControl.errors) {
+        <div class="error-container">
+          @if (bookerControl.hasError('required')) { <p class="error">ID is required.</p> }
+          @if (bookerControl.hasError('pattern')) { <p class="error">Format: EMP + Digits.</p> }
+          
+          @if (bookerControl.hasError('selfBooking')) { 
+            <p class="error">You cannot book your own ride!</p> 
+          }
+          
+          @if (bookerControl.hasError('serverError')) { 
+             <p class="error">{{ bookerControl.getError('serverError') }}</p> 
+          }
+        </div>
+      }
+
       <div class="actions">
         <button (click)="selectedRideId.set(null)">Cancel</button>
-        <button class="btn success" (click)="confirmBook()">Confirm</button>
+        <button class="btn success" 
+                (click)="confirmBook()" 
+                [disabled]="bookerControl.invalid">
+          Confirm
+        </button>
       </div>
     </div>
   </div>

@@ -1,89 +1,93 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms'; // 1. Import Reactive parts
+import { toSignal } from '@angular/core/rxjs-interop'; // 2. Import toSignal for filtering
 import { TransportService } from '../../services/transport';
 import { UpperCaseDirective } from '../../directives/upper-case';
 import { OfferRideComponent } from '../offer-ride/offer-ride';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-find-ride',
   standalone: true,
-  // 2. Add it to imports
-  imports: [CommonModule, FormsModule, UpperCaseDirective, OfferRideComponent], 
+  imports: [CommonModule, ReactiveFormsModule, UpperCaseDirective, OfferRideComponent], // 3. Use ReactiveFormsModule
   templateUrl: './find-ride.html',
   styleUrls: ['./find-ride.css']
 })
 export class FindRideComponent {
   private service = inject(TransportService);
+  private fb = inject(FormBuilder);
   
-  // --- Search Signals ---
-  searchTime = signal('');
-  searchVehicle = signal('All');
-  
-  // --- Booking Modal State ---
-  selectedRideId = signal<string | null>(null);
-  bookerId = '';
-  bookMsg = '';
+  // --- 1. Search Form Group ---
+  searchForm = this.fb.group({
+    time: [''],
+    vehicle: ['All']
+  });
 
-  // --- NEW: Offer Ride Modal State ---
+  // --- 2. Booking Control (Single FormControl) ---
+  // This validates: Required + Starts with EMP/Digits + Max 7 chars
+  bookerControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern(/^EMP[0-9]{1,4}$/), 
+    Validators.maxLength(7) 
+  ]);
+
+  // --- Modal State ---
+  selectedRideId = signal<string | null>(null);
   showOfferModal = signal(false);
 
-  // Define regex for validations
-  private readonly empRegex = /^EMP[0-9]{1,4}$/;
-
-  // ... (Your formatTime and filteredRides logic stays the same) ...
-  
-  formatTime(time24: string): string {
-    if (!time24) return '';
-    const [hours, minutes] = time24.split(':').map(Number);
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const hours12 = hours % 12 || 12; 
-    return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
-  }
+  // --- Filter Logic ---
+  // Convert form changes into a Signal so 'filteredRides' updates automatically
+  private searchValues = toSignal(
+    this.searchForm.valueChanges.pipe(
+      startWith(this.searchForm.value) // Ensure it has data on load
+    ), 
+    { initialValue: this.searchForm.value }
+  );
 
   filteredRides = computed(() => {
-     // ... (Keep your existing filtering logic here) ...
      const rides = this.service.rides();
-     const timeVal = this.searchTime();
-     const typeVal = this.searchVehicle();
+     // Read values from our new signal
+     const { time, vehicle } = this.searchValues(); 
 
-     if (!timeVal) return [];
+     if (!time) return [];
 
-     const searchMins = this.service.timeToMinutes(timeVal);
+     const searchMins = this.service.timeToMinutes(time);
 
      return rides.filter(r => {
-        if (typeVal !== 'All' && r.vehicleType !== typeVal) return false;
+        if (vehicle !== 'All' && r.vehicleType !== vehicle) return false;
+        
         const rideMins = this.service.timeToMinutes(r.time);
         if (Math.abs(rideMins - searchMins) > 60) return false;
+        
         return true;
      }).sort((a, b) => this.service.timeToMinutes(a.time) - this.service.timeToMinutes(b.time));
   });
 
   // --- Actions ---
-  
+
   initBook(id: string) {
     this.selectedRideId.set(id);
-    this.bookerId = '';
-    this.bookMsg = '';
+    this.bookerControl.reset(); // Clear previous input
   }
 
-  confirmBook() {
-    if (!this.bookerId.trim()) {
-      this.bookMsg = 'Employee ID is required.';
-      return;
-    }
-    if (!this.empRegex.test(this.bookerId)) {
-      this.bookMsg = "Invalid Format. Must be 'EMP' followed by digits.";
-      return;
-    }
+confirmBook() {
+  this.bookerControl.markAsTouched();
 
-    const res = this.service.bookRide(this.selectedRideId()!, this.bookerId);
-    
-    if (res.success) {
-      alert(res.message);
-      this.selectedRideId.set(null);
-    } else {
-      this.bookMsg = res.message;
-    }
+  if (this.bookerControl.invalid) return;
+
+  const empId = this.bookerControl.value!;
+  
+  // Call the service
+  const res = this.service.bookRide(this.selectedRideId()!, empId);
+  
+  if (res.success) {
+    alert(res.message);
+    this.selectedRideId.set(null); // Close modal on success
+  } else {
+    // This will display "Duplicate: You have already booked this ride."
+    // right under the input box
+    this.bookerControl.setErrors({ serverError: res.message });
   }
+}
 }

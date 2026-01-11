@@ -1,5 +1,4 @@
 export type VehicleType = 'Car' | 'Bike';
-
 export interface Ride {
   id: string;         
   employeeId: string;  
@@ -9,4 +8,6 @@ export interface Ride {
   time: string;       
   pickupPoint: string;
   destination: string;
+  bookedUsers?: string[]; 
 }
+
