@@ -1,11 +1,10 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { TransportService } from '../../services/transport';
 import { Ride } from '../../models/ride.model';
 import { Subscription } from 'rxjs';
 import { UpperCaseDirective } from '../../directives/upper-case';
-
 
 @Component({
   selector: 'app-offer-ride',
@@ -14,10 +13,10 @@ import { UpperCaseDirective } from '../../directives/upper-case';
   templateUrl: './offer-ride.html',
   styleUrls: ['./offer-ride.css'] 
 })
-
-
 export class OfferRideComponent implements OnInit, OnDestroy {
-  commonLocations = [
+  
+  // FIXED: Renamed 'commonLocations' to 'locations' to match your HTML
+  locations: string[] = [
     'Office - Eco Space',
     'Silk Board Junction',
     'HSR Layout BDA Complex',
@@ -37,69 +36,48 @@ export class OfferRideComponent implements OnInit, OnDestroy {
   success = false;
 
   private readonly vehicleRegex = /^[A-Z]{2}[ -]?[0-9]{1,2}[ -]?[A-Z]{1,2}[ -]?[0-9]{4}$/;
-  private readonly empIdRegex = /^EMP[0-9]{1,4}$/;
-
-  allowedLocationValidator(allowedList: string[]): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
-      if (!value) return null; // Let required validator handle empty strings
-
-      // Check if the current value exists in the allowed list
-      const isValid = allowedList.includes(value);
-
-      return isValid ? null : { invalidLocation: true };
-    };
-  }
 
   rideForm = this.fb.group({
     employeeId: ['', [Validators.required, Validators.pattern(/^EMP[0-9]{1,4}$/), Validators.maxLength(7)]],
     vehicleType: ['Car', Validators.required],
     vehicleNo: ['', [Validators.required, Validators.pattern(this.vehicleRegex)]],
-    vacantSeats: [1, [Validators.required, Validators.min(1), Validators.max(6)]],
+    vacantSeats: [1, [Validators.required, Validators.min(1), Validators.max(5)]], // Default max to 5 (Car)
     time: ['', [Validators.required, this.futureTimeValidator]], 
-    
-    // --- 2. APPLY THE VALIDATOR HERE ---
-    pickupPoint: ['', [
-      Validators.required, 
-      this.allowedLocationValidator(this.commonLocations) // Pass the list
-    ]],
-    destination: ['', [
-      Validators.required, 
-      this.allowedLocationValidator(this.commonLocations) // Pass the list
-    ]]
+    pickupPoint: ['', Validators.required], 
+    destination: ['', Validators.required],
   }, { 
     validators: this.pickupDestinationValidator 
   });
 
-  // --- LOGIC FOR VALIDATOR A (Past Time) ---
+  // --- CUSTOM VALIDATORS ---
+
   futureTimeValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
 
     const [inputHours, inputMinutes] = control.value.split(':').map(Number);
     const now = new Date();
     
-    // Convert current time to minutes (e.g., 14:00 = 840 mins)
+    // Convert times to minutes for easy comparison
     const currentTotalMinutes = (now.getHours() * 60) + now.getMinutes();
     const inputTotalMinutes = (inputHours * 60) + inputMinutes;
 
-    // If input is less than or equal to now, it's invalid
     if (inputTotalMinutes <= currentTotalMinutes) {
       return { pastTime: true };
     }
     return null;
   }
 
-  // --- LOGIC FOR VALIDATOR B (Same Location) ---
   pickupDestinationValidator(group: AbstractControl): ValidationErrors | null {
     const pickup = group.get('pickupPoint')?.value;
     const dest = group.get('destination')?.value;
 
-    // Check if both exist and are effectively equal
-    if (pickup && dest && pickup.trim().toLowerCase() === dest.trim().toLowerCase()) {
+    if (pickup && dest && pickup === dest) {
       return { sameLocation: true };
     }
     return null;
   }
+
+  // --- LIFECYCLE HOOKS ---
 
   ngOnInit() {
     this.sub = this.rideForm.get('vehicleType')!.valueChanges.subscribe(type => {
@@ -111,10 +89,8 @@ export class OfferRideComponent implements OnInit, OnDestroy {
     const seatControl = this.rideForm.get('vacantSeats');
     
     if (type === 'Bike') {
-      // Max 1 seats for Bike
       seatControl?.setValidators([Validators.required, Validators.min(1), Validators.max(1)]);
     } else {
-      // Max 5 seats for Car
       seatControl?.setValidators([Validators.required, Validators.min(1), Validators.max(5)]);
     }
     
@@ -133,6 +109,7 @@ export class OfferRideComponent implements OnInit, OnDestroy {
       this.success = res.success;
 
       if (this.success) {
+        // Reset form but keep defaults
         this.rideForm.reset({ vehicleType: 'Car', vacantSeats: 1 });
       }
     } else {
@@ -147,5 +124,5 @@ export class OfferRideComponent implements OnInit, OnDestroy {
 
   get v() {
      return this.rideForm.controls; 
-    }
+  }
 }
